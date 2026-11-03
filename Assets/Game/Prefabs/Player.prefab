@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 161575336168447775}
   - component: {fileID: 3907498680567489442}
   - component: {fileID: 5355278259603323953}
-  m_Layer: 3
+  - component: {fileID: -7427558763956659203}
+  m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -33,6 +34,7 @@ Transform:
   m_Children:
   - {fileID: 495111400657944734}
   - {fileID: 536769525928768025}
+  - {fileID: 6019395514294063307}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &3907498680567489442
@@ -79,11 +81,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Game.PlayerController
   playerSoul: {fileID: 1356765851157661055}
   playerBody: {fileID: 4685574961898214435}
-  firePoint: {fileID: 0}
-  maxSoulSpeed: 10
-  maxBodySpeed: 8
+  firePoint: {fileID: 2644243371880160978}
+  projectilePrefab: {fileID: 3372236729708225726, guid: a4d578486e8b03546a8693d0c97bc3e3, type: 3}
+  maxSoulSpeed: 20
+  maxBodySpeed: 15
   accelerationTime: 0.01
   decelerationTime: 0.25
+  shotCooldown: 0.25
+--- !u!114 &-7427558763956659203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682144608983369642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17cbcd6af6c60164780c284a02cae36a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.PlayerHealth
+  maxHealth: 100
 --- !u!1 &1356765851157661055
 GameObject:
   m_ObjectHideFlags: 0
@@ -96,9 +113,9 @@ GameObject:
   - component: {fileID: 271621464292232506}
   - component: {fileID: 3225414532092276318}
   - component: {fileID: 3309386805103461980}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Soul
-  m_TagString: Untagged
+  m_TagString: Soul
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -168,8 +185,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_LinearDamping: 2
+  m_AngularDamping: 2
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -178,10 +195,10 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 8
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 4
+  m_Constraints: 0
 --- !u!114 &3309386805103461980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -205,7 +222,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5402782435468232310}
   - component: {fileID: 5129706814651560796}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Body Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -296,7 +313,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6720241268529505181}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Firepoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,7 +346,7 @@ GameObject:
   m_Component:
   - component: {fileID: 584957993248344032}
   - component: {fileID: 6930924417633686874}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Soul Sprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -421,7 +438,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7957479233505208102}
   - component: {fileID: 3030147789891158762}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Firepoint Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -514,7 +531,7 @@ GameObject:
   - component: {fileID: 536769525928768025}
   - component: {fileID: 4168622297577462892}
   - component: {fileID: 5593751502213345468}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -597,8 +614,8 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
+  m_LinearDamping: 2
+  m_AngularDamping: 2
   m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -607,7 +624,56 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 8
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
-  m_Constraints: 4
+  m_Constraints: 0
+--- !u!1 &6991271253594822640
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6019395514294063307}
+  - component: {fileID: 1557363928548914419}
+  m_Layer: 0
+  m_Name: Chain Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6019395514294063307
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6991271253594822640}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.97328, y: 0.41735, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 161575336168447775}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1557363928548914419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6991271253594822640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4e00221b084c346837224c77eccec0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Game.ChainController
+  soulRb: {fileID: 3225414532092276318}
+  bodyRb: {fileID: 5593751502213345468}
+  chainLinkPrefab: {fileID: 4388280706950295865, guid: ee9d87a47f74d7e4ead7c07fdfed4862, type: 3}
+  linkCount: 40
+  linkLength: 0.25

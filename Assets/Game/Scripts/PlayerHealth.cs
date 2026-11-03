@@ -1,4 +1,6 @@
+
 using UnityEngine;
+using System;
 
 namespace Game
 {
@@ -8,23 +10,31 @@ namespace Game
 
         private float currentHealth;
 
-        private void Start()
+        public event Action<float, float> OnHealthChanged;
+
+        public float CurrentHealth => currentHealth;
+        public float MaxHealth => maxHealth;
+
+        private void Awake()
         {
             currentHealth = maxHealth;
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
 
         public void TakeDamage()
         {
-            currentHealth -= 1;
-            if (currentHealth <= 0)
-            {
-                Death();
-            }
+            TakeDamage(1f);
         }
 
         public void TakeDamage(float damage)
         {
             currentHealth -= damage;
+            currentHealth = Mathf.Max(currentHealth, 0);
+
+            Debug.Log("Health changed: " + currentHealth);
+
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
             if (currentHealth <= 0)
             {
                 Death();

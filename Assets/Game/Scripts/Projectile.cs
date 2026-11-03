@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 namespace Game
@@ -10,33 +11,56 @@ namespace Game
         [SerializeField] private float lifetime = 5f;
         [SerializeField] private float damage = 5f;
 
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        private Rigidbody2D rb;
+        private PlayerHealth owner;
+
+        void Awake()
+        {
+            rb = GetComponent<Rigidbody2D>();
+        }
+
+        public void SetOwner(PlayerHealth player)
+        {
+            owner = player;
+        }
+
+        public void Launch(Vector2 direction)
+        {
+            rb.linearVelocity = direction.normalized * projectileSpeed;
+        }
+
         void Start()
         {
-            Rigidbody2D rb = GetComponent<Rigidbody2D>();
-
-            ///rb.velocity = transform.
-
             Destroy(gameObject, lifetime);
         }
 
-        // Update is called once per frame
-        void Update()
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-        
-        }
+            // Find the player that owns the object we hit.
+            PlayerHealth hitPlayer = collision.GetComponentInParent<PlayerHealth>();
 
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            HandleHit(collision.gameObject);
-        }
-
-        private void HandleHit(GameObject hitObject)
-        {
-            if (hitObject.TryGetComponent<PlayerHealth>(out PlayerHealth health))
+            if (hitPlayer != null)
             {
-                health.TakeDamage(damage);
+                // Ignore the firing player's own objects.
+                if (hitPlayer == owner)
+                    return;
+
+                // Only damage another player's Soul.
+                if (collision.CompareTag("Soul"))
+                {
+                    hitPlayer.TakeDamage(damage);
+                    Destroy(gameObject);
+                }
+
+                return;
             }
+
+            Debug.Log("Hit object: " + collision.name);
+            Debug.Log("Hit player: " + collision.GetComponentInParent<PlayerHealth>());
+            Debug.Log("Owner: " + owner);
+            Debug.Log("Soul tag: " + collision.CompareTag("Soul"));
+
+            // Destroy the projectile when it hits the environment.
             Destroy(gameObject);
         }
     }

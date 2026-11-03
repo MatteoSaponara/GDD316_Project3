@@ -1,4 +1,7 @@
 
+using System;
+using System.Collections;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +14,7 @@ namespace Game
         [SerializeField] GameObject playerSoul;
         [SerializeField] GameObject playerBody;
         [SerializeField] GameObject firePoint;
+        [SerializeField] GameObject projectilePrefab;
 
         [Tooltip("Movement")]
         [SerializeField] float maxSoulSpeed = 15f;
@@ -19,11 +23,25 @@ namespace Game
         [SerializeField] float accelerationTime = 0.5f;
         [SerializeField] float decelerationTime = 0.25f;
 
+        [Header("Firing")]
+        [SerializeField] float shotCooldown = 0.5f;
+
+        private Boolean canShoot = true;
+
         private Vector2 currentSoulVelocity;
         private Vector2 currentBodyVelocity;
 
         private Vector2 lastSoulInput;
         private Vector2 lastBodyInput;
+
+        private Rigidbody2D soulRb;
+        private Rigidbody2D bodyRb;
+
+        private void Awake()
+        {
+            soulRb = playerSoul.GetComponent<Rigidbody2D>();
+            bodyRb = playerBody.GetComponent<Rigidbody2D>();
+        }
 
         private void OnMoveSoul(InputValue value)
         {
@@ -46,13 +64,8 @@ namespace Game
                     currentBodyVelocity.x
                 ) * Mathf.Rad2Deg;
 
-                playerBody.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+                bodyRb.MoveRotation(angle);
             }
-        }
-
-        private void Update()
-        {
-            
         }
 
         private void FixedUpdate()
@@ -88,23 +101,51 @@ namespace Game
             );
 
             // Apply movement independently.
-            playerSoul.transform.position +=
-                (Vector3)(currentSoulVelocity * Time.deltaTime);
+            //playerSoul.transform.position +=
+            //    (Vector3)(currentSoulVelocity * Time.deltaTime);
 
-            playerBody.transform.position +=
-                (Vector3)(currentBodyVelocity * Time.deltaTime);
+            //playerBody.transform.position +=
+            //    (Vector3)(currentBodyVelocity * Time.deltaTime);
+
+            // Apply movement independently.
+            soulRb.linearVelocity = currentSoulVelocity;
+            bodyRb.linearVelocity = currentBodyVelocity;
 
             RotateBody();
         }
 
         private void OnShoot()
         {
-            FireProjectile();
+            if (canShoot)
+            {
+                FireProjectile();
+                canShoot = false;
+                StartCoroutine(ShootingCooldown());
+            }
         }
 
         private void FireProjectile()
         {
-            Debug.Log("Projectile fired");
+            GameObject projectileObject = Instantiate(
+                projectilePrefab,
+                firePoint.transform.position,
+                firePoint.transform.rotation
+            );
+
+            Projectile projectile = projectileObject.GetComponent<Projectile>();
+
+            PlayerHealth owner = GetComponent<PlayerHealth>();
+
+            projectile.SetOwner(owner);
+            projectile.Launch(firePoint.transform.right);
         }
+
+        IEnumerator ShootingCooldown()
+        {
+            yield return new WaitForSeconds(shotCooldown);
+            canShoot = true;
+        }
+
+        
     }
 }
