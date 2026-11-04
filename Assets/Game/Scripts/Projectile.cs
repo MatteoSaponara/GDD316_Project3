@@ -1,5 +1,6 @@
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 namespace Game
 {
@@ -41,6 +42,14 @@ namespace Game
 
             if (hitPlayer != null)
             {
+                PlayerInput hitInput = hitPlayer.GetComponent<PlayerInput>();
+
+                Debug.Log(
+                    $"Projectile: PlayerIndex={(hitInput != null ? hitInput.playerIndex : -1)}, " +
+                    $"PlayerInputID={(hitInput != null ? hitInput.GetEntityId() : -1)}, " +
+                    $"HealthID={hitPlayer.GetEntityId()}"
+                );
+
                 // Ignore the firing player's own objects.
                 if (hitPlayer == owner)
                     return;
@@ -54,11 +63,6 @@ namespace Game
 
                 return;
             }
-
-            Debug.Log("Hit object: " + collision.name);
-            Debug.Log("Hit player: " + collision.GetComponentInParent<PlayerHealth>());
-            Debug.Log("Owner: " + owner);
-            Debug.Log("Soul tag: " + collision.CompareTag("Soul"));
 
             // Destroy the projectile when it hits the environment.
             Destroy(gameObject);

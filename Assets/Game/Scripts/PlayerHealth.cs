@@ -32,6 +32,7 @@ namespace Game
             currentHealth = Mathf.Max(currentHealth, 0);
 
             Debug.Log("Health changed: " + currentHealth);
+            Debug.Log($"PlayerHealth ID: {GetEntityId()} took damage. Health: {currentHealth}");
 
             OnHealthChanged?.Invoke(currentHealth, maxHealth);
 

@@ -67,9 +67,10 @@ namespace Game
                     // Connect the health bar to the player's health
                     HealthBarUI healthBarUI = healthBar.GetComponentInChildren<HealthBarUI>();
                     PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-
-                    Debug.Log("HealthBarUI found: " + (healthBarUI != null));
-                    Debug.Log("PlayerHealth found: " + (playerHealth != null));
+                    Debug.Log(
+                     $"UI: PlayerIndex={player.playerIndex}, " +
+                     $"PlayerInputID={player.GetEntityId()}, " +
+                     $"HealthID={playerHealth.GetEntityId()}");
 
                     healthBarUI.Initialize(playerHealth);
 

@@ -20,6 +20,8 @@ namespace Game
 
             // Initialize the health bar
             UpdateHealthBar(playerHealth.CurrentHealth, playerHealth.MaxHealth);
+
+            Debug.Log($"Health bar subscribed to PlayerHealth ID: {playerHealth.GetEntityId()}");
         }
 
         private void UpdateHealthBar(float currentHealth, float maxHealth)
